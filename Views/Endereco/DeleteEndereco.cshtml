@@ -1,0 +1,72 @@
+﻿@model webMVC.Models.EnderecoModel
+
+@{
+    ViewBag.Title = "DeleteEndereco";
+}
+
+<h2>DeleteEndereco</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>EnderecoModel</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.IdEnd)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IdEnd)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IdEmp)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IdEmp)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Rua)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Rua)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Bairro)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Bairro)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Complemento)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Complemento)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Ativo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Ativo)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "ListEnd")
+        </div>
+    }
+</div>
