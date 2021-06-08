@@ -34,6 +34,27 @@ namespace webMVC.Service
             }
         }
 
+        public IEnumerable<DepartamentoModel> AllItem(int id)
+        {
+            string query = "SELECT * FROM departamento where idDep = @id";
+            using (SqlConnection con = new SqlConnection(connect))
+            {
+                con.Open();
+                using (SqlCommand cmd = new SqlCommand(query, con))
+                {
+                    cmd.Parameters.Add(new SqlParameter("ID", id));
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            yield return new DepartamentoModel(reader.GetInt32(0), reader.GetString(1));
+                        }
+                    }
+                }
+            }
+        }
+
         public IList<EmployeeModel> GetEmployeeList()
         {
             IList<EmployeeModel> getEmpList = new List<EmployeeModel>();
@@ -42,7 +63,7 @@ namespace webMVC.Service
             using(SqlConnection con = new SqlConnection(connect))
             {
                 con.Open();
-                string query = "SELECT * FROM tblEmployee;";
+                string query = "SELECT e.Id as id,e.EmpName as EmpName, d.DepName as DepName, e.EmpName as EmpName, e.EmailId as EmailId, e.MobileNo as MobileNo  FROM tblEmployee as e join Departamento as d on e.IdDep = d.IdDep";
                 using(SqlCommand cmd = new SqlCommand(query, con))
                 {
                     cmd.CommandType = CommandType.Text;
@@ -54,7 +75,8 @@ namespace webMVC.Service
                         {
                             EmployeeModel obj = new EmployeeModel();
                             obj.Id = Convert.ToInt32(_ds.Tables[0].Rows[i]["Id"]);
-                            obj.IdDep = Convert.ToInt32(_ds.Tables[0].Rows[i]["IdDep"]);
+                            obj.EmpName = Convert.ToString(_ds.Tables[0].Rows[i]["EmpName"]);
+                            obj.NameDep = Convert.ToString(_ds.Tables[0].Rows[i]["DepName"]);
                             obj.EmpName = Convert.ToString(_ds.Tables[0].Rows[i]["EmpName"]);
                             obj.EmailId = Convert.ToString(_ds.Tables[0].Rows[i]["EmailId"]);
                             obj.MobileNo = Convert.ToString(_ds.Tables[0].Rows[i]["MobileNo"]);
@@ -74,9 +96,14 @@ namespace webMVC.Service
             {
                 con.Open();
                 string query = "INSERT INTO tblEmployee(IdDep,EmpName,EmailId,MobileNo)" +
-                    "VALUES("+model.IdDep+",'"+model.EmpName+"','"+model.EmailId+"','"+model.MobileNo+"');";
+                    "VALUES(@ID, @EmpName, @EmailId, @MobileNo);";
                 using(SqlCommand cmd = new SqlCommand(query, con))
                 {
+                    cmd.Parameters.Add(new SqlParameter("ID", model.IdDep));
+                    cmd.Parameters.Add(new SqlParameter("EmpName", model.EmpName));
+                    cmd.Parameters.Add(new SqlParameter("EmailId", model.EmailId));
+                    cmd.Parameters.Add(new SqlParameter("MobileNo", model.IdDep));
+
                     cmd.CommandType = CommandType.Text;
                     cmd.ExecuteNonQuery();
                 }

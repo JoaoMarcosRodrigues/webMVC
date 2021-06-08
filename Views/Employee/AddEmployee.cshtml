@@ -18,8 +18,8 @@
         <div class="form-group">
             @Html.LabelFor(model => model.IdDep, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownList("DepartamentoModel", ViewBag.Dep as IEnumerable<SelectListItem>,
-                    "--Select--", htmlAttributes: new { @class = "form-control" })
+                @Html.DropDownListFor(model => model.IdDep, new SelectList(ViewBag.DepartamentoModel, "Id", "DepName"),
+                    "Selecione o Departamento", new { @class = "form-control", required = "required" })
                 @Html.ValidationMessageFor(model => model.IdDep, "", new { @class = "text-danger" })
             </div>
         </div>

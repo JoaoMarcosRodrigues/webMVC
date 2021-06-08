@@ -13,6 +13,9 @@ namespace webMVC.Models
         [Required]
         public int IdDep { get; set; }
 
+        public string NameDep { get; set; }
+
+
         [Required]
         public string EmpName { get; set; }
 

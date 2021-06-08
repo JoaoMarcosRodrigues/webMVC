@@ -21,14 +21,13 @@ namespace webMVC.Controllers
         public ActionResult List()
         {
             var model = _empServices.GetEmployeeList();
-            
+
             return View(model);
         }
 
         public ActionResult AddEmployee()
         {
-            ViewBag.DepartamentoModel = new SelectList(_empServices.All(), "Id", "DepName");
-
+            ViewBag.DepartamentoModel = _empServices.All();
             return View();
         }
 
@@ -37,9 +36,12 @@ namespace webMVC.Controllers
         {
             try
             {
+                ViewBag.DepartamentoModel = _empServices.AllItem(model.IdDep);
+
                 _empServices.InsertEmployee(model);
+
             }
-            catch(SqlException ex)
+            catch (SqlException ex)
             {
                 for (int i = 0; i < ex.Errors.Count; i++)
                 {
@@ -51,7 +53,7 @@ namespace webMVC.Controllers
                 }
                 Console.WriteLine(errorMessages.ToString());
             }
-            
+
 
             return RedirectToAction("List");
         }
