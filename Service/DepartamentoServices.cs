@@ -5,6 +5,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
+using System.Web.Http;
 using webMVC.Models;
 
 namespace webMVC.Service
@@ -15,7 +16,7 @@ namespace webMVC.Service
         private SqlDataAdapter _adapter;
         private DataSet _ds;
 
-        public IList<DepartamentoModel> GetDepartamentoList()
+        public IEnumerable<DepartamentoModel> GetDepartamentoList()
         {
             IList<DepartamentoModel> getDepList = new List<DepartamentoModel>();
             _ds = new DataSet();
@@ -24,7 +25,7 @@ namespace webMVC.Service
             {
                 con.Open();
                 string query = "SELECT * FROM departamento";
-                using(SqlCommand cmd = new SqlCommand(query, con))
+                using (SqlCommand cmd = new SqlCommand(query, con))
                 {
                     _adapter = new SqlDataAdapter(cmd);
                     _adapter.Fill(_ds);
@@ -33,8 +34,8 @@ namespace webMVC.Service
                         for (int i = 0; i < _ds.Tables[0].Rows.Count; i++)
                         {
                             DepartamentoModel obj = new DepartamentoModel();
-                            obj.Id = Convert.ToInt32(_ds.Tables[0].Rows[i]["IdDep"]);
-                            obj.DepName = Convert.ToString(_ds.Tables[0].Rows[i]["DepName"]);
+                            obj.Id = Convert.ToInt32(_ds.Tables[0].Rows[i]["Id"]);
+                            obj.DepName = Convert.ToString(_ds.Tables[0].Rows[i]["Nome"]);
 
                             getDepList.Add(obj);
                         }
@@ -50,7 +51,7 @@ namespace webMVC.Service
             using (SqlConnection con = new SqlConnection(connect))
             {
                 con.Open();
-                string query = "INSERT INTO departamento(DepName)VALUES('" + model.DepName + "');";
+                string query = "INSERT INTO departamento(Nome)VALUES('" + model.DepName + "');";
                 using(SqlCommand cmd = new SqlCommand(query, con))
                 {
                     cmd.CommandType = CommandType.Text;
@@ -66,7 +67,7 @@ namespace webMVC.Service
             using (SqlConnection con = new SqlConnection(connect))
             {
                 con.Open();
-                string query = "SELECT * FROM departamento WHERE IdDep="+Id+";";
+                string query = "SELECT * FROM departamento WHERE Id="+Id+";";
                 using(SqlCommand cmd = new SqlCommand(query, con))
                 {
                     cmd.CommandType = CommandType.Text;
@@ -76,8 +77,8 @@ namespace webMVC.Service
 
                     if (_ds.Tables.Count > 0 && _ds.Tables[0].Rows.Count > 0)
                     {
-                        model.Id = Convert.ToInt32(_ds.Tables[0].Rows[0]["IdDep"]);
-                        model.DepName = Convert.ToString(_ds.Tables[0].Rows[0]["DepName"]);
+                        model.Id = Convert.ToInt32(_ds.Tables[0].Rows[0]["Id"]);
+                        model.DepName = Convert.ToString(_ds.Tables[0].Rows[0]["Nome"]);
                     }
                 }
             }
@@ -89,7 +90,7 @@ namespace webMVC.Service
             using (SqlConnection con = new SqlConnection(connect))
             {
                 con.Open();
-                string query = "UPDATE departamento SET DepName='"+model.DepName+"' WHERE IdDep="+model.Id;
+                string query = "UPDATE departamento SET Nome='"+model.DepName+"' WHERE Id="+model.Id;
                 using (SqlCommand cmd = new SqlCommand(query, con))
                 {
                     cmd.CommandType = CommandType.Text;
@@ -103,7 +104,7 @@ namespace webMVC.Service
             using (SqlConnection con = new SqlConnection(connect))
             {
                 con.Open();
-                string query = "DELETE FROM departamento WHERE IdDep="+Id+";";
+                string query = "DELETE FROM departamento WHERE Id="+Id+";";
                 using(SqlCommand cmd = new SqlCommand(query, con))
                 {
                     cmd.CommandType = CommandType.Text;

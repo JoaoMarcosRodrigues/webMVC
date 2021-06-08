@@ -58,7 +58,7 @@ namespace webMVC.Controllers
         public ActionResult EditEndereco(int Id)
         {
             var model = _endServices.GetEditById(Id);
-            ViewBag.EnderecoModel = new SelectList(_endServices.All(), "IdEnd", "IdEmp");
+            //ViewBag.EnderecoModel = new SelectList(_endServices.All(), "IdEnd", "IdEmp");
 
             return View(model);
         }

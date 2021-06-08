@@ -17,7 +17,7 @@ namespace webMVC.Service
 
         public IEnumerable<EnderecoModel> All()
         {
-            string query = "SELECT IdEnd,IdEmp FROM endereco ORDER BY IdEmp";
+            string query = "SELECT * FROM empregado";
             using (SqlConnection con = new SqlConnection(connect))
             {
                 con.Open();
@@ -28,7 +28,7 @@ namespace webMVC.Service
                         while (reader.Read())
                         {
                             EnderecoModel model = new EnderecoModel();
-                            model.IdEmp = reader.GetInt32(0);
+                            model.IdEnd = reader.GetInt32(0);
                             model.IdEmp = reader.GetInt32(1);
                             yield return model;
                         }
@@ -57,7 +57,7 @@ namespace webMVC.Service
                         for (int i = 0; i < _ds.Tables[0].Rows.Count; i++)
                         {
                             EnderecoModel obj = new EnderecoModel();
-                            obj.IdEnd = Convert.ToInt32(_ds.Tables[0].Rows[i]["IdEnd"]);
+                            obj.IdEnd = Convert.ToInt32(_ds.Tables[0].Rows[i]["Id"]);
                             obj.IdEmp = Convert.ToInt32(_ds.Tables[0].Rows[i]["IdEmp"]);
                             obj.Rua = Convert.ToString(_ds.Tables[0].Rows[i]["Rua"]);
                             obj.Bairro = Convert.ToString(_ds.Tables[0].Rows[i]["Bairro"]);
@@ -95,7 +95,7 @@ namespace webMVC.Service
             using (SqlConnection con = new SqlConnection(connect))
             {
                 con.Open();
-                string query = "SELECT * FROM endereco WHERE IdEnd="+Id;
+                string query = "SELECT * FROM endereco WHERE Id="+Id+";";
                 using(SqlCommand cmd = new SqlCommand(query, con))
                 {
                     cmd.CommandType = CommandType.Text;
@@ -105,7 +105,7 @@ namespace webMVC.Service
 
                     if (_ds.Tables.Count > 0 && _ds.Tables[0].Rows.Count > 0)
                     {
-                        model.IdEnd = Convert.ToInt32(_ds.Tables[0].Rows[0]["IdEnd"]);
+                        model.IdEnd = Convert.ToInt32(_ds.Tables[0].Rows[0]["Id"]);
                         model.IdEmp = Convert.ToInt32(_ds.Tables[0].Rows[0]["IdEmp"]);
                         model.Rua = Convert.ToString(_ds.Tables[0].Rows[0]["Rua"]);
                         model.Bairro = Convert.ToString(_ds.Tables[0].Rows[0]["Bairro"]);
@@ -121,7 +121,7 @@ namespace webMVC.Service
         {
             string query = "UPDATE endereco SET IdEmp=" + model.IdEmp + ",Rua='" + model.Rua + "',Bairro='" +
                 model.Bairro + "',Complemento='" + model.Complemento + "',Ativo=" + model.Ativo 
-                + " WHERE IdEnd=" + model.IdEnd;
+                + " WHERE Id=" + model.IdEnd;
             using (SqlConnection con = new SqlConnection(connect))
             {
                 con.Open();
@@ -138,7 +138,7 @@ namespace webMVC.Service
             using (SqlConnection con = new SqlConnection(connect))
             {
                 con.Open();
-                string query = "DELETE FROM endereco WHERE IdEnd="+ id + ";";
+                string query = "DELETE FROM endereco WHERE Id="+ id + ";";
                 using (SqlCommand cmd = new SqlCommand(query, con))
                 {
                     cmd.CommandType = CommandType.Text;

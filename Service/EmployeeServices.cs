@@ -17,7 +17,7 @@ namespace webMVC.Service
 
         public IEnumerable<DepartamentoModel> All()
         {
-            string query = "SELECT * FROM departamento ORDER BY DepName";
+            string query = "SELECT * FROM departamento ORDER BY Nome";
             using (SqlConnection con = new SqlConnection(connect))
             {
                 con.Open();
@@ -34,7 +34,7 @@ namespace webMVC.Service
             }
         }
 
-        public IList<EmployeeModel> GetEmployeeList()
+        public IEnumerable<EmployeeModel> GetEmployeeList()
         {
             IList<EmployeeModel> getEmpList = new List<EmployeeModel>();
             _ds = new DataSet();
@@ -42,7 +42,7 @@ namespace webMVC.Service
             using(SqlConnection con = new SqlConnection(connect))
             {
                 con.Open();
-                string query = "SELECT * FROM tblEmployee;";
+                string query = "SELECT * FROM empregado;";
                 using(SqlCommand cmd = new SqlCommand(query, con))
                 {
                     cmd.CommandType = CommandType.Text;
@@ -55,9 +55,10 @@ namespace webMVC.Service
                             EmployeeModel obj = new EmployeeModel();
                             obj.Id = Convert.ToInt32(_ds.Tables[0].Rows[i]["Id"]);
                             obj.IdDep = Convert.ToInt32(_ds.Tables[0].Rows[i]["IdDep"]);
-                            obj.EmpName = Convert.ToString(_ds.Tables[0].Rows[i]["EmpName"]);
-                            obj.EmailId = Convert.ToString(_ds.Tables[0].Rows[i]["EmailId"]);
-                            obj.MobileNo = Convert.ToString(_ds.Tables[0].Rows[i]["MobileNo"]);
+                            obj.Cpf = Convert.ToString(_ds.Tables[0].Rows[i]["Cpf"]);
+                            obj.EmpName = Convert.ToString(_ds.Tables[0].Rows[i]["Nome"]);
+                            obj.EmailId = Convert.ToString(_ds.Tables[0].Rows[i]["Email"]);
+                            obj.MobileNo = Convert.ToString(_ds.Tables[0].Rows[i]["Telefone"]);
 
                             getEmpList.Add(obj);
                         }
@@ -73,9 +74,9 @@ namespace webMVC.Service
             using(SqlConnection con = new SqlConnection(connect))
             {
                 con.Open();
-                string query = "INSERT INTO tblEmployee(IdDep,EmpName,EmailId,MobileNo)" +
-                    "VALUES("+model.IdDep+",'"+model.EmpName+"','"+model.EmailId+"','"+model.MobileNo+"');";
-                using(SqlCommand cmd = new SqlCommand(query, con))
+                string query = "INSERT INTO empregado(IdDep,Cpf,Nome,Email,Telefone)" +
+                    "VALUES(" + model.IdDep + ",'" + model.Cpf + "','" + model.EmpName + "','" + model.EmailId + "','" + model.MobileNo + "');";
+                using (SqlCommand cmd = new SqlCommand(query, con))
                 {
                     cmd.CommandType = CommandType.Text;
                     cmd.ExecuteNonQuery();
@@ -90,7 +91,7 @@ namespace webMVC.Service
             using(SqlConnection con = new SqlConnection(connect))
             {
                 con.Open();
-                string query = "SELECT * FROM tblEmployee WHERE Id="+Id+";";
+                string query = "SELECT * FROM empregado WHERE Id="+Id+";";
                 using(SqlCommand cmd = new SqlCommand(query, con))
                 {
                     cmd.CommandType = CommandType.Text;
@@ -103,10 +104,48 @@ namespace webMVC.Service
                     {
                         model.Id = Convert.ToInt32(_ds.Tables[0].Rows[0]["Id"]);
                         model.IdDep = Convert.ToInt32(_ds.Tables[0].Rows[0]["IdDep"]);
-                        model.EmpName = Convert.ToString(_ds.Tables[0].Rows[0]["EmpName"]);
-                        model.EmailId = Convert.ToString(_ds.Tables[0].Rows[0]["EmailId"]);
-                        model.MobileNo = Convert.ToString(_ds.Tables[0].Rows[0]["MobileNo"]);
+                        model.Cpf = Convert.ToString(_ds.Tables[0].Rows[0]["Cpf"]);
+                        model.EmpName = Convert.ToString(_ds.Tables[0].Rows[0]["Nome"]);
+                        model.EmailId = Convert.ToString(_ds.Tables[0].Rows[0]["Email"]);
+                        model.MobileNo = Convert.ToString(_ds.Tables[0].Rows[0]["Telefone"]);
                     }
+                }
+            }
+            return model;
+        }
+
+        public EmployeeModel GetEmpByCpf(string cpf)
+        {
+            var model = new EmployeeModel();
+
+            using (SqlConnection con = new SqlConnection(connect))
+            {
+                con.Open();
+                try
+                {
+                    string query = "SELECT * FROM empregado WHERE Cpf = '"+cpf+"'";
+                    using (SqlCommand cmd = new SqlCommand(query, con))
+                    {
+                        cmd.CommandType = CommandType.Text;
+
+                        _adapter = new SqlDataAdapter(cmd);
+                        _ds = new DataSet();
+                        _adapter.Fill(_ds);
+
+                        if (_ds.Tables.Count > 0 && _ds.Tables[0].Rows.Count > 0)
+                        {
+                            model.Id = Convert.ToInt32(_ds.Tables[0].Rows[0]["Id"]);
+                            model.IdDep = Convert.ToInt32(_ds.Tables[0].Rows[0]["IdDep"]);
+                            model.Cpf = Convert.ToString(_ds.Tables[0].Rows[0]["Cpf"]);
+                            model.EmpName = Convert.ToString(_ds.Tables[0].Rows[0]["Nome"]);
+                            model.EmailId = Convert.ToString(_ds.Tables[0].Rows[0]["Email"]);
+                            model.MobileNo = Convert.ToString(_ds.Tables[0].Rows[0]["Telefone"]);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.Write(ex.Message);
                 }
             }
             return model;
@@ -117,8 +156,8 @@ namespace webMVC.Service
             using(SqlConnection con = new SqlConnection(connect))
             {
                 con.Open();
-                string query = "UPDATE tblEmployee SET IdDep="+model.IdDep+",EmpName='"+model.EmpName+"',"+
-                    "EmailId='"+model.EmailId+"',MobileNo='"+model.MobileNo+"' WHERE Id="+model.Id+";";
+                string query = "UPDATE empregado SET IdDep="+model.IdDep+",Cpf="+model.Cpf+",Nome='"+model.EmpName+"',"+
+                    "Email='"+model.EmailId+"',Telefone='"+model.MobileNo+"' WHERE Id="+model.Id+";";
                 using(SqlCommand cmd = new SqlCommand(query, con))
                 {
                     cmd.CommandType = CommandType.Text;
@@ -132,7 +171,7 @@ namespace webMVC.Service
             using(SqlConnection con = new SqlConnection(connect))
             {
                 con.Open();
-                string query = "DELETE FROM tblEmployee WHERE Id="+Id+";";
+                string query = "DELETE FROM empregado WHERE Id="+Id+";";
                 using(SqlCommand cmd = new SqlCommand(query, con))
                 {
                     cmd.CommandType = CommandType.Text;

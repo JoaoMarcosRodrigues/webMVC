@@ -64,6 +64,14 @@ namespace webMVC.Controllers
             return View(model);
         }
 
+        [AcceptVerbs("GET", "POST")]
+        public ActionResult GetEmpByCpf(string cpf)
+        {
+            var model = _empServices.GetEmpByCpf(cpf);
+
+            return View(model);
+        }
+
         [HttpPost]
         public ActionResult EditEmployee(EmployeeModel model)
         {
